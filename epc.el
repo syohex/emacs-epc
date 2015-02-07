@@ -392,7 +392,7 @@ failure."
   (let* ((uid (epc:uid))
          (process-name (epc:server-process-name uid))
          (process-buffer (get-buffer-create (epc:server-buffer-name uid)))
-         (process (apply 'start-process
+         (process (apply 'start-file-process
                          process-name process-buffer
                          server-prog server-args))
          (cont 1) port)
@@ -427,7 +427,7 @@ to see full traceback:\n%s" port-str))
       ((uid (epc:uid))
        (process-name (epc:server-process-name uid))
        (process-buffer (get-buffer-create (epc:server-buffer-name uid)))
-       (process (apply 'start-process
+       (process (apply 'start-file-process
                        process-name process-buffer
                        server-prog server-args))
        (mngr (make-epc:manager
