@@ -20,7 +20,7 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 
@@ -28,7 +28,7 @@
 (require 'epc)
 
 (defvar epcs:client-processes nil
-  "[internal] A list of ([process object] . [`epc:manager' instance]).  
+  "[internal] A list of ([process object] . [`epc:manager' instance]).
 When the server process accepts the client connection, the
 `epc:manager' instance is created and stored in this variable
 `epcs:client-processes'. This variable is used for the management
@@ -47,24 +47,24 @@ This variable is used for the management purpose.")
 
 (defun epcs:server-start (connect-function &optional port)
   "Start TCP Server and return the main process object."
-  (lexical-let* 
+  (lexical-let*
       ((connect-function connect-function)
        (name (format "EPC Server %s" (epc:uid)))
        (buf (epc:make-procbuf (format "*%s*" name)))
-       (main-process 
-        (make-network-process 
+       (main-process
+        (make-network-process
          :name name
          :buffer buf
          :family 'ipv4 :server t :nowait t
          :host "127.0.0.1" :service (or port t)
-         :sentinel 
-         (lambda (process message) 
+         :sentinel
+         (lambda (process message)
            (epcs:sentinel process message connect-function)))))
     (unless port
       ;; notify port number to the parent process via STDOUT.
       (message "%s\n" (process-contact main-process :service)))
     (push (cons main-process
-                (make-epcs:server 
+                (make-epcs:server
                  :name name :process main-process
                  :port (process-contact main-process :service)
                  :connect-function connect-function))
@@ -74,13 +74,13 @@ This variable is used for the management purpose.")
 (defun epcs:server-stop (process)
   "Stop the TCP server process."
   (cond
-   ((and process 
+   ((and process
          (assq process epcs:server-processes))
     (epc:log "EPCS: Shutdown Server: %S" process)
     (let ((buf (process-buffer process)))
       (delete-process process)
       (kill-buffer buf))
-    (setq epcs:server-processes 
+    (setq epcs:server-processes
           (assq-delete-all process epcs:server-processes)))
    (t (error "Not found in the server process list. [%S]" process))))
 
@@ -105,14 +105,14 @@ This variable is used for the management purpose.")
   (lexical-let* ((connection-id (epc:uid))
                  (connection-name (format "epc con %s" connection-id))
                  (channel (cc:signal-channel connection-name))
-                 (connection (make-epc:connection 
+                 (connection (make-epc:connection
                               :name connection-name
                               :process process
                               :buffer (process-buffer process)
                               :channel channel)))
     (epc:log "EPCS: >> Connection establish")
     (set-process-coding-system process 'binary 'binary)
-    (set-process-filter process 
+    (set-process-filter process
                         (lambda (p m)
                           (epc:process-filter connection p m)))
     (set-process-sentinel process
@@ -134,7 +134,7 @@ This variable is used for the management purpose.")
             (epc:init-epc-layer mngr)
             (when connect-function (funcall connect-function mngr))
             mngr)
-        ('error 
+        ('error
          (epc:log "EPCS: Protocol error: %S" err)
          (epc:log "EPCS: ABORT %S" process)
          (delete-process process))))
@@ -146,7 +146,7 @@ This variable is used for the management purpose.")
         (when pair
           (epc:log "EPCS: DISCONNECT %S" process)
           (epc:stop-epc (cdr pair))
-          (setq epcs:client-processes 
+          (setq epcs:client-processes
                 (assq-delete-all process epcs:client-processes))
           ))
       nil))))

@@ -35,12 +35,12 @@ Here is a client code.
 
 (deferred:$
   (epc:call-deferred epc 'echo '(10))
-  (deferred:nextc it 
+  (deferred:nextc it
     (lambda (x) (message "Return : %S" x))))
 
 (deferred:$
   (epc:call-deferred epc 'add '(10 40))
-  (deferred:nextc it 
+  (deferred:nextc it
     (lambda (x) (message "Return : %S" x))))
 
 ;; calling synchronously
@@ -61,12 +61,12 @@ use RPC::EPC::Service;
 
 sub echo_test {
     my $methods = {
-    
+
         'echo' => [sub {
             my $args = shift;
             return $args;
         },"args","just echo back arguments."],
-        
+
         'add' => sub {
             my $args_ref = shift;
             my ($a,$b) = @$args_ref;
@@ -86,7 +86,7 @@ Here is the equivalent server code in emacs lisp.
 (require 'epcs)
 
 (let ((connect-function
-       (lambda (mngr) 
+       (lambda (mngr)
          (epc:define-method mngr 'echo (lambda (&rest x) x) "args" "just echo back arguments.")
          (epc:define-method mngr 'add '+ "args" "add argument numbers.")
          )) server-process)
@@ -288,7 +288,7 @@ Here is a sample code for the EPC server:
 (require 'epcs)
 
 (let ((connect-function
-       (lambda (mngr) 
+       (lambda (mngr)
          (epc:define-method mngr 'echo (lambda (x) x) "args" "just echo back arguments.")
          (epc:define-method mngr 'add '+ "args" "add argument numbers.")
          )) server-process)

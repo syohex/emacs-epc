@@ -10,11 +10,11 @@
     (message "DB %s / %s [%S]" dbname sql epc)
     (deferred:$
       (epc:call-deferred epc 'connect dbname)
-      (deferred:nextc it 
+      (deferred:nextc it
         (lambda (x) (message "Return : %S" x)
           (epc:call-deferred epc 'query sql)))
-      (deferred:nextc it 
-        (lambda (records) 
+      (deferred:nextc it
+        (lambda (records)
           (let ((buf (get-buffer-create "*EDBC Result*")))
             (with-current-buffer buf
               (erase-buffer)
@@ -25,5 +25,5 @@
             (pop-to-buffer buf))
           (epc:stop-epc epc)))
       (deferred:watch it
-        (lambda (x) 
+        (lambda (x)
           (epc:stop-epc epc))))))

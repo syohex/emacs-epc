@@ -6,7 +6,7 @@ use DBI;
 
 sub db_connect {
   my $dbh;
-  my $methods = 
+  my $methods =
     {
      'connect' => sub {
        my ($args) = @_;
@@ -29,5 +29,3 @@ sub db_connect {
 }
 
 db_connect;
-
-

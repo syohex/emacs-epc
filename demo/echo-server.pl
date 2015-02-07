@@ -19,4 +19,3 @@ sub echo_test {
 }
 
 echo_test();
-

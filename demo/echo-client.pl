@@ -8,4 +8,3 @@ $ret = $client->call_method('echo', 'hello epc!');
 print $ret->recv . "\n";
 
 $client->stop;
-
